@@ -17,10 +17,29 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-
       - uses: actions/checkout@v2
-      - name: Install pipenv
-        run: pipx install pipenv
+      - uses: actions/setup-python@v2
+      - uses: jannekem/run-python-script-action@v1
+        with:
+          script: |
+            import pandas as pd
+            import requests, json
 
-      - name: Run scraper
-        run: pipenv run jupyter execute scrape_test.ipynb
+            # Search by BBL. example: 4013050036
+
+            mapPlutoURL = 'https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/ArcGIS/rest/services/MAPPLUTO/FeatureServer/0/query?where=BBL+%3D+4013050036&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=false&returnCentroid=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=false&quantizationParameters=&sqlFormat=none&f=pjson&token='
+            url = requests.get(mapPlutoURL)
+            text = url.text
+            data = json.loads(text)
+            # features of BBL 4013050036
+            df = pd.DataFrame(data['features'][0]['attributes'], index=[0])
+            df.to_csv("data")
+        # commit and push the saved data    
+      - name: Add and commit	
+        run: |-	
+          git add .	
+          git config user.name "Automated"	
+          git config user.email "actions@users.noreply.github.com"	
+          git commit -m "Latest data" 	
+      - name: Push	
+        run: git push
