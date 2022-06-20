@@ -28,17 +28,58 @@ jobs:
         with:
           script: |
             import pandas as pd
-            import pandas as pd
 
+            # zap list api
             projects = pd.DataFrame()
             boroughs = ['Manhattan','Bronx','Brooklyn','Queens','Staten%20Island']
 
             for borough in boroughs: 
               url = 'https://zap-api-production.herokuapp.com/projects.csv?page=1&block=&boroughs%5B0%5D='+borough+'&dcp_publicstatus%5B0%5D=In%20Public%20Review&dcp_publicstatus%5B1%5D=Noticed'
               projects = projects.append(pd.read_csv(url))
+              projects = projects.reset_index(drop=True)
 
-            projects = projects.reset_index(drop=True)
-            projects.to_csv("data")
+              projects = projects[["id", "applicants", "dcp-borough", "dcp-femafloodzonea", "dcp-projectname", "dcp-projectbrief", "dcp-ceqrnumber", "dcp-publicstatus", "dcp-noticeddate"]]
+
+            # zap single file api
+            import requests, json
+            zapURL = list('https://zap-api-production.herokuapp.com/projects/'+projects['id'])
+            bbls = []
+            ulurps = []
+            polygons = []
+            for i in zapURL:
+              #print(i)
+              url = requests.get(i)
+              text = url.text
+
+              data = json.loads(text)
+              # read bbl
+              bbls.append(data['data']['attributes']['bbls'])
+
+              # read ulurp number
+              ulurp = []
+              for i in range(len(data['included'])):
+                try:
+                  ulurp.append(data['included'][i]['attributes']['dcp-ulurpnumber'])
+
+                except KeyError:
+                  continue
+              ulurps.append(ulurp)
+
+              # read polygon
+                try:
+                  polygons.append(data['data']['attributes']['bbl-featurecollection']['features'][0]['geometry']['coordinates'][0][0])
+                except KeyError:
+                  #print(i)
+                  #print('error')
+                  polygons.append('')
+                  continue
+
+            # add to make dataframe
+            projects['bbls'] = bbls
+            projects['ulurpnumbers'] = ulurps
+            projects['polygon'] = polygons
+
+            projects.to_csv("data.csv")
               
         # commit and push the saved data    
       - name: Add and commit
