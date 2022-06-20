@@ -116,7 +116,8 @@ jobs:
             df = df[['BBL', 'BuiltFAR', 'ResidFAR', 'CommFAR', 'FacilFAR', 'ZoneMap', 'OwnerName', 'ZipCode', 'Block', 'LotArea', 'BldgArea', 'LandUse']]
             df['BBL'] = df['BBL'].astype(str)
             result = pd.merge(df_new, df, how="left", on=['BBL'])
-
+            result = result.drop_duplicates(subset=['id', 'BBL'])
+            
             # save combined
             result.to_csv("consolidated_data.csv")
               
