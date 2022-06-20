@@ -66,13 +66,13 @@ jobs:
               ulurps.append(ulurp)
 
               # read polygon
-                try:
-                  polygons.append(data['data']['attributes']['bbl-featurecollection']['features'][0]['geometry']['coordinates'][0][0])
-                except KeyError:
-                  #print(i)
-                  #print('error')
-                  polygons.append('')
-                  continue
+              try:
+                polygons.append(data['data']['attributes']['bbl-featurecollection']['features'][0]['geometry']['coordinates'][0][0])
+              except KeyError:
+                #print(i)
+                #print('error')
+                polygons.append('')
+                continue
 
             # add to make dataframe
             projects['bbls'] = bbls
