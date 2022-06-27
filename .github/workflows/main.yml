@@ -113,7 +113,7 @@ jobs:
                 continue
 
             # select features
-            df = df[['BBL', 'BuiltFAR', 'ResidFAR', 'CommFAR', 'FacilFAR', 'ZoneMap', 'OwnerName', 'ZipCode', 'Block', 'LotArea', 'BldgArea', 'LandUse']]
+            df = df[['BBL', 'Latitude', 'Longitude', 'BuiltFAR', 'ResidFAR', 'CommFAR', 'FacilFAR', 'ZoneMap', 'OwnerName', 'ZipCode', 'Block', 'LotArea', 'BldgArea', 'LandUse']]
             df['BBL'] = df['BBL'].astype(str)
             result = pd.merge(df_new, df, how="left", on=['BBL'])
             result = result.drop_duplicates(subset=['id', 'BBL'])
