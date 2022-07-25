@@ -80,7 +80,7 @@ jobs:
             projects['polygon'] = polygons
 
             # save zap alone
-            projects.to_csv("zap_projects_data.csv")
+            projects.to_json("zap_projects_data.json", orient = 'records')
 
             # combine zap and pluto
             # transform dataframe, list by BBL
@@ -119,7 +119,7 @@ jobs:
             result = result.drop_duplicates(subset=['id', 'BBL'])
             
             # save combined
-            result.to_csv("consolidated_data.csv")
+            result.to_json("consolidated_data.json", orient = 'records')
               
         # commit and push the saved data    
       - name: Add and commit
