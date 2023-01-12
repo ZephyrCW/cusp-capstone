@@ -1,4 +1,4 @@
-# Read Me
+# Democratizing New York City’s urban development processes
 
 
 ## Introduction
@@ -14,3 +14,6 @@ Workflow will run on a github server everyday 8AM, scraping all the desired info
 - Hanfie Vandanu
 - Zenn Wong
 - Ying Lei
+
+## Visualization   
+The link to Interactive Map based on this data output is [here](https://incitu-project-maps.vercel.app/).
