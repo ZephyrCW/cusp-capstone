@@ -17,3 +17,6 @@ Workflow will run on a github server everyday 8AM, scraping all the desired info
 
 ## Visualization   
 The link to Interactive Map based on this data output is [here](https://incitu-project-maps.vercel.app/).
+
+## Final Report
+The link to the final report is [here](https://github.com/ZephyrCW/cusp-capstone/blob/main/capstone_report.pdf)
